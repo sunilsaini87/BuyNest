@@ -1,0 +1,16 @@
+{
+  "name": "buynest",
+  "version": "1.0.0",
+  "description": "A E-Commerce Website",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "Sunil Saini",
+  "license": "ISC",
+  "dependencies": {
+    "colors": "^1.4.0",
+    "express": "^4.19.2"
+  }
+}
