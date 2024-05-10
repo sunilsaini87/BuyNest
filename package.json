@@ -6,7 +6,9 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "server": "nodemon server.js"
+    "server": "nodemon server.js",
+    "client": "npm start --prefix ./client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "keywords": [],
   "author": "Sunil Saini",
@@ -15,6 +17,7 @@
     "@sendgrid/mail": "^8.1.3",
     "bcryptjs": "^2.4.3",
     "braintree": "^3.23.0",
+    "colors": "^1.4.0",
     "concurrently": "^8.2.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
@@ -24,6 +27,7 @@
     "mongoose": "^8.3.4",
     "morgan": "^1.10.0",
     "nodemon": "^3.1.0",
+    "react-icons": "^5.2.1",
     "slugify": "^1.6.6"
   }
 }
