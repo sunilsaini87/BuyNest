@@ -1,5 +1,5 @@
 import express from "express";
-import { connectDB, connectRedis } from "./utils/features.js";
+import { connectDB } from "./utils/features.js"; // Removed connectRedis
 import { errorMiddleware } from "./middlewares/error.js";
 import { config } from "dotenv";
 import morgan from "morgan";
@@ -21,11 +21,8 @@ config({
 const port = process.env.PORT || 4000;
 const mongoURI = process.env.MONGO_URI || "";
 const stripeKey = process.env.STRIPE_KEY || "";
-const redisURI = process.env.REDIS_URI || "";
-export const redisTTL = process.env.REDIS_TTL || 60 * 60 * 4;
 
 connectDB(mongoURI);
-export const redis = connectRedis(redisURI);
 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -39,13 +36,7 @@ const app = express();
 
 app.use(express.json());
 app.use(morgan("dev"));
-app.use(
-  cors({
-    origin: [process.env.CLIENT_URL!],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-  })
-);
+app.use(cors());
 
 app.get("/", (req, res) => {
   res.send("API Working with /api/v1");
