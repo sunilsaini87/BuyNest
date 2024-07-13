@@ -1,10 +1,8 @@
 import { UploadApiResponse, v2 as cloudinary } from "cloudinary";
-import { Redis } from "ioredis";
 import mongoose, { Document } from "mongoose";
-import { redis } from "../app.js";
 import { Product } from "../models/product.js";
 import { Review } from "../models/review.js";
-import { InvalidateCacheProps, OrderItemType } from "../types/types.js";
+import { OrderItemType } from "../types/types.js";
 
 export const findAverageRatings = async (
   productId: mongoose.Types.ObjectId
@@ -16,11 +14,11 @@ export const findAverageRatings = async (
     totalRating += review.rating;
   });
 
-  const averateRating = Math.floor(totalRating / reviews.length) || 0;
+  const averageRating = Math.floor(totalRating / reviews.length) || 0;
 
   return {
     numOfReviews: reviews.length,
-    ratings: averateRating,
+    ratings: averageRating,
   };
 };
 
@@ -58,15 +56,6 @@ export const deleteFromCloudinary = async (publicIds: string[]) => {
   await Promise.all(promises);
 };
 
-export const connectRedis = (redisURI: string) => {
-  const redis = new Redis(redisURI);
-
-  redis.on("connect", () => console.log("Redis Connected"));
-  redis.on("error", (e) => console.log(e));
-
-  return redis;
-};
-
 export const connectDB = (uri: string) => {
   mongoose
     .connect(uri, {
@@ -84,42 +73,17 @@ export const invalidateCache = async ({
   userId,
   orderId,
   productId,
-}: InvalidateCacheProps) => {
-  if (review) {
-    await redis.del([`reviews-${productId}`]);
-  }
-
-  if (product) {
-    const productKeys: string[] = [
-      "latest-products",
-      "categories",
-      "all-products",
-    ];
-
-    if (typeof productId === "string") productKeys.push(`product-${productId}`);
-
-    if (typeof productId === "object")
-      productId.forEach((i) => productKeys.push(`product-${i}`));
-
-    await redis.del(productKeys);
-  }
-  if (order) {
-    const ordersKeys: string[] = [
-      "all-orders",
-      `my-orders-${userId}`,
-      `order-${orderId}`,
-    ];
-
-    await redis.del(ordersKeys);
-  }
-  if (admin) {
-    await redis.del([
-      "admin-stats",
-      "admin-pie-charts",
-      "admin-bar-charts",
-      "admin-line-charts",
-    ]);
-  }
+}: {
+  product?: boolean;
+  order?: boolean;
+  admin?: boolean;
+  review?: boolean;
+  userId?: string;
+  orderId?: string;
+  productId?: string | string[];
+}) => {
+  // This function previously included Redis cache invalidation logic
+  // Now it's just a placeholder without Redis operations
 };
 
 export const reduceStock = async (orderItems: OrderItemType[]) => {
@@ -167,6 +131,7 @@ interface MyDocument extends Document {
   discount?: number;
   total?: number;
 }
+
 type FuncProps = {
   length: number;
   docArr: MyDocument[];

@@ -3,7 +3,6 @@ import { adminOnly } from "../middlewares/auth.js";
 import {
   getBarCharts,
   getDashboardStats,
-  getLineCharts,
   getPieCharts,
 } from "../controllers/stats.js";
 
@@ -19,6 +18,6 @@ app.get("/pie", adminOnly, getPieCharts);
 app.get("/bar", adminOnly, getBarCharts);
 
 // route - /api/v1/dashboard/line
-app.get("/line", adminOnly, getLineCharts);
+// app.get("/line", adminOnly, getLineCharts);
 
 export default app;
